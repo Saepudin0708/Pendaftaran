@@ -16,10 +16,15 @@ Class PendaftaranController extends Controller
 
     public function postPendaftaran(Request $request)
     {
-        
         $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:posts|max:255',
-            'body' => 'required',
+            'tahun_ajaran' => 'required',
+            'jenis_kelamin' => 'required',
+            'agama' => 'required',
+            'tempat_lahir' => 'required',
+            'tahun' => 'required',
+            'bulan' => 'required',
+            'tanggal' => 'required',
+            'alamat' => 'required',
         ]);
 
         $error = array();
@@ -27,14 +32,7 @@ Class PendaftaranController extends Controller
             $error = $validator->errors();
         }
 
-
         return response()->json($error, 200);
-
-        array(
-                'message' => array(
-                        'wongka harus disini', 'sapi harus disi'
-                    );
-            );
     }
 
 }

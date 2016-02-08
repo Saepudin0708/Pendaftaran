@@ -29,35 +29,33 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12"> 
-                <div class="panel panel-primary">
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Pendaftaran</h3>
                     </div>
                     <div class="panel-body">
-                    <div class="alert alert-danger" role="alert">
-                      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                      <span class="sr-only">Error:</span>
-                      Enter a valid email address
+                    <div class="alert alert-danger" role="alert" id="alert" style="display:none">
                     </div>
                         <form class="form-horizontal">
                             <div class="form-group">
                                 <label for="user" class="col-lg-2 control-label">Tahun Ajaran</label>
                                 <div class="col-lg-6">
-                                    <select class="form-control">
+                                    <select class="form-control" id="tahun_ajaran">
                                         <option value="">-- Pilih tahun ajaran --</option>
                                         <option>2015</option>
                                         <option>2016</option>
                                     </select>
+                                    <span id="tahun_ajaran_error"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="user" class="col-lg-2 control-label">Nama Lengkap</label>
                                 <div class="col-lg-6">
-                                    <input name="Nama Siswa" type="text" class="form-control" placeholder="Tuliskan nama lengkap" size="" value="">
+                                    <input id="nama_lengkap" type="text" class="form-control" placeholder="Tuliskan nama lengkap" size="" value="">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="user" class="col-lg-2 control-label">Jenis Kelamin</label>
+                                <label id="jenis_kelamin" class="col-lg-2 control-label">Jenis Kelamin</label>
                                 <div class="col-lg-6">
                                     <select class="form-control">
                                         <option value="">-- Pilih jenis kelamin --</option>
@@ -67,7 +65,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="user" class="col-lg-2 control-label">Agama</label>
+                                <label id="agama" class="col-lg-2 control-label">Agama</label>
                                 <div class="col-lg-6">
                                     <select class="form-control">
                                         <option value="">-- Pilih agama --</option>
@@ -78,35 +76,35 @@
                             <div class="form-group">
                                 <label for="user" class="col-lg-2 control-label">Tempat, Tanggal Lahir</label>
                                 <div class="col-lg-3">
-                                    <input name="" type="text" class="form-control" placeholder="Tuliskan tempat kelahiran" size="" value="">
+                                    <input id="tempat_lahir" type="text" class="form-control" placeholder="Tuliskan tempat kelahiran" size="" value="">
                                 </div>
                                 <div class="col-lg-2">
-                                    <select class="form-control">
-                                        <option value="">-- Pilih tanggal --</option>
+                                    <select id="tahun" class="form-control">
+                                        <option value="">-- Pilih tahun --</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-2">
-                                    <select class="form-control">
+                                    <select id="bulan" class="form-control">
                                         <option value="">-- Pilih bulan --</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-2">
-                                    <select class="form-control">
-                                        <option value="">-- Pilih tahun --</option>
+                                    <select id="tanggal" class="form-control">
+                                        <option value="">-- Pilih tanggal --</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="user" class="col-lg-2 control-label">Alamat Lengkap</label>
                                 <div class="col-lg-6">
-                                    <textarea class="form-control" style="min-height:150px;"></textarea>
+                                    <textarea id="alamat" class="form-control" style="min-height:150px;"></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="user" class="col-lg-2 control-label"></label>
                                 <div class="col-lg-6">
-                                    <button class="btn btn-primary">Submit</button>
+                                    <a class="btn btn-primary" id="submit">Submit</a>
                                 </div>
                             </div>
                         </form>
@@ -121,6 +119,38 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+
+    <script>
+    $("#submit").click(function(){
+
+        $.ajax({
+            url: "/daftar",
+            method: "POST",
+            data: 
+            {
+                tahun_ajaran : $("#tahun_ajaran").val(),
+                nama_lengkap : $("#nama_lengkap").val(),
+                jenis_kelamin : $("#jenis_kelamin").val(),
+                agama : $("#agama").val(),
+                tempat_lahir : $("#tempat_lahir").val(),
+                tahun : $("#tahun").val(),
+                bulan : $("#bulan").val(),
+                tanggal : $("#tanggal").val(),
+                alamat : $("#alamat").val(),
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data.tahun_ajaran) {
+                    $("#tahun_ajaran_error").html(data.tahun_ajaran);
+                    $("#tahun_ajaran_error").fadeIn();
+                } else {
+                    $("#tahun_ajaran_error").fadeOut();
+                }
+            }
+        })
+
+    });
+    </script>
   </body>
 </html>
 
