@@ -34,3 +34,12 @@ Route::group(['middleware' => ['IsAdmin']], function () {
     ]);
 
 });
+
+
+Route::get('/daftar', [
+    'uses'  => '\App\Http\Controllers\PendaftaranController@getPendaftaran',
+]);
+
+Route::post('/daftar', [
+    'uses'  => '\App\Http\Controllers\PendaftaranController@postPendaftaran',
+]);
