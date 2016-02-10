@@ -18,6 +18,7 @@ Class PendaftaranController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'tahun_ajaran' => 'required',
+            'nama_lengkap' => 'required',
             'jenis_kelamin' => 'required',
             'agama' => 'required',
             'tempat_lahir' => 'required',
@@ -27,12 +28,13 @@ Class PendaftaranController extends Controller
             'alamat' => 'required',
         ]);
 
-        $error = array();
         if ($validator->fails()) {
-            $error = $validator->errors();
+            $errors = $validator->errors();
+            return response()->json($errors, 400);
         }
 
-        return response()->json($error, 200);
+        return response()->json(array('message' => 'Data berhasil ditambah'), 200);
+
     }
 
 }
