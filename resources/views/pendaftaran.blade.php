@@ -9,6 +9,7 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -45,59 +46,67 @@
                                         <option>2015</option>
                                         <option>2016</option>
                                     </select>
-                                    <span id="tahun_ajaran_error"></span>
+                                    <span class="error-span" id="tahun_ajaran_error"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="user" class="col-lg-2 control-label">Nama Lengkap</label>
                                 <div class="col-lg-6">
                                     <input id="nama_lengkap" type="text" class="form-control" placeholder="Tuliskan nama lengkap" size="" value="">
+                                    <span class="error-span" id="nama_lengkap_error"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label id="jenis_kelamin" class="col-lg-2 control-label">Jenis Kelamin</label>
                                 <div class="col-lg-6">
-                                    <select class="form-control">
+                                    <select class="form-control" id="jenis_kelamin">
                                         <option value="">-- Pilih jenis kelamin --</option>
                                         <option value="male">Pria</option>
                                         <option value="female">Wanita</option>
                                     </select>
+                                    <span class="error-span" id="jenis_kelamin_error"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label id="agama" class="col-lg-2 control-label">Agama</label>
+                                <label class="col-lg-2 control-label">Agama</label>
                                 <div class="col-lg-6">
-                                    <select class="form-control">
+                                    <select class="form-control" id="agama">
                                         <option value="">-- Pilih agama --</option>
                                         <option value="islam">Islam</option>
                                     </select>
+                                    <span class="error-span" id="agama_error"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="user" class="col-lg-2 control-label">Tempat, Tanggal Lahir</label>
                                 <div class="col-lg-3">
                                     <input id="tempat_lahir" type="text" class="form-control" placeholder="Tuliskan tempat kelahiran" size="" value="">
+                                    <span class="error-span" id="tempat_lahir_error"></span>
                                 </div>
                                 <div class="col-lg-2">
                                     <select id="tahun" class="form-control">
                                         <option value="">-- Pilih tahun --</option>
                                     </select>
+                                    <span class="error-span" id="tahun_error"></span>
                                 </div>
                                 <div class="col-lg-2">
                                     <select id="bulan" class="form-control">
                                         <option value="">-- Pilih bulan --</option>
                                     </select>
+                                    <span class="error-span" id="bulan_error"></span>
                                 </div>
                                 <div class="col-lg-2">
                                     <select id="tanggal" class="form-control">
                                         <option value="">-- Pilih tanggal --</option>
                                     </select>
+                                    <span class="error-span" id="tanggal_error"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="user" class="col-lg-2 control-label">Alamat Lengkap</label>
                                 <div class="col-lg-6">
                                     <textarea id="alamat" class="form-control" style="min-height:150px;"></textarea>
+                                    <span class="error-span" id="alamat_error"></span>
                                 </div>
                             </div>
 
@@ -140,12 +149,25 @@
             },
             dataType: "json",
             success: function(data) {
-                if (data.tahun_ajaran) {
-                    $("#tahun_ajaran_error").html(data.tahun_ajaran);
+                $(".error-span").fadeOut();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Obj = jQuery.parseJSON(jqXHR.responseText)
+                $(".error-span").fadeOut();                
+
+                $.each( Obj, function( key, value ) {
+                    if (key) {
+                        $("#" + key + "_error").html(value);
+                        $("#" + key + "_error").fadeIn();
+                    }
+                });
+
+                /*
+                if (Obj.tahun_ajaran) {
+                    $("#tahun_ajaran_error").html(Obj.tahun_ajaran);
                     $("#tahun_ajaran_error").fadeIn();
-                } else {
-                    $("#tahun_ajaran_error").fadeOut();
                 }
+                */
             }
         })
 
