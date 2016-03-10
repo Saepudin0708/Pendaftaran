@@ -42,4 +42,9 @@ Route::get('/daftar', [
 
 Route::post('/daftar', [
     'uses'  => '\App\Http\Controllers\PendaftaranController@postPendaftaran',
+    'as' => 'daftar_post'
+]);
+
+Route::post('/daftar/tmpupload', [
+    'uses'  => '\App\Http\Controllers\PendaftaranController@postUploadToTemporary'
 ]);

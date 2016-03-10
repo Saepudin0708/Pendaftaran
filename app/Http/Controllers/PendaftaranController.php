@@ -37,4 +37,24 @@ Class PendaftaranController extends Controller
 
     }
 
+    public function postUploadToTemporary(Request $request)
+    {
+        $request->file('photo');
+        if ($request->file('photo')->isValid()) {
+            $filename = md5(date("YmdHis")) . $request->file('photo')->getClientOriginalName();
+            $image_path = base_path() . '/public/tmp/';
+            $request->file('photo')->move($image_path, $filename);
+            return response()->json(array('message' => 'Photo uploaded', 'photo' => $filename), 200);
+        } else {
+            return response()->json(array('message' => 'Error while uploading photo'), 200);
+        }
+    }
+
+    public function MoveTemporaryUpload($filename)
+    {
+        $old_path = base_path() . '/public/tmp/' . $filename;
+        $new_path = base_path() . '/public/images/' . $filename;
+        File::move($old_path, $new_path);
+    }
+
 }

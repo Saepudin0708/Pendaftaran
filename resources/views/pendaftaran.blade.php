@@ -114,11 +114,28 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="user" class="col-lg-2 control-label">Photo</label>
+                                <div class="col-lg-3">
+                                    <img src="/img/upload-logo-icon.png" id="preview" style="width:150px;" onclick="$('#photo').click();">
+                                    <input type="hidden" id="photo-name" style="display:none"><br><br>
+                                    <div class="progress">
+                                      <div class="upload-photo-progress progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="user" class="col-lg-2 control-label"></label>
                                 <div class="col-lg-6">
                                     <a class="btn btn-primary" id="submit">Submit</a>
                                 </div>
                             </div>
+                        </form>
+
+                        <form action="/daftar/tmpupload" method="POST" enctype="multipart/form-data" id="form-upload">
+                            <input type="file" name="photo" class="form-control" id="photo" style="display:none;" onchange="$('#photo-submit').click()">
+                            <input type="submit" id="photo-submit" name="submit" value="submit" style="display:none;">
                         </form>
                     </div>
                 </div>
@@ -136,7 +153,7 @@
     $("#submit").click(function(){
 
         $.ajax({
-            url: "/daftar",
+            url: "{{ route('daftar_post') }}",
             method: "POST",
             data: 
             {
@@ -166,6 +183,37 @@
         })
 
     });
+    </script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script>
+    (function() {
+       
+    $('#form-upload').ajaxForm({
+        beforeSend: function() {
+            $('#preview').attr( { 'src' : '/img/loading.gif' } );
+            var percentVal = '0%';
+            $('.upload-photo-progress').width(percentVal);
+        },
+        uploadProgress: function(event, position, total, percentComplete) {
+            var percentVal = percentComplete + '%';
+            $('.upload-photo-progress').width(percentVal);
+        },
+        success: function(result) {
+            if (result.photo) {
+                var percentVal = '100%';
+                $('.upload-photo-progress').width(percentVal);
+                $('#preview').attr( { 'src' : '/tmp/' + result.photo } );
+            } else {
+                var percentVal = '0%';
+                $('.upload-photo-progress').width(percentVal);
+            }
+        },
+        complete: function(xhr) {
+            
+        }
+    }); 
+
+    })();       
     </script>
   </body>
 </html>
