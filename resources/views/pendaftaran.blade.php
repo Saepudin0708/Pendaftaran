@@ -8,8 +8,8 @@
     <title>Pendaftaran</title>
 
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/main.css" rel="stylesheet">
+    <link href="{{ \URL::asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ \URL::asset('css/main.css') }}" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -86,21 +86,27 @@
                                 <div class="col-lg-2">
                                     <select id="tahun" class="form-control">
                                         <option value="">-- Pilih tahun --</option>
-                                        <option value="1">1</option>
+                                        <?php for ($y = date("Y") - 15; $y <= date("Y"); $y++) : ?>
+                                        <option value="<?=$y?>"><?=$y?></option>
+                                        <?php endfor; ?>
                                     </select>
                                     <span class="error-span" id="tahun_error"></span>
                                 </div>
                                 <div class="col-lg-2">
                                     <select id="bulan" class="form-control">
                                         <option value="">-- Pilih bulan --</option>
-                                        <option value="1">1</option>
+                                        <?php for ($m = 1; $m <= 12; $m++) : ?>
+                                        <option value="<?=$m?>"><?=$m?></option>
+                                        <?php endfor; ?>
                                     </select>
                                     <span class="error-span" id="bulan_error"></span>
                                 </div>
                                 <div class="col-lg-2">
                                     <select id="tanggal" class="form-control">
                                         <option value="">-- Pilih tanggal --</option>
-                                        <option value="1">1</option>
+                                        <?php for ($d = 1; $d <= 31; $d++) : ?>
+                                        <option value="<?=$d?>"><?=$d?></option>
+                                        <?php endfor; ?>
                                     </select>
                                     <span class="error-span" id="tanggal_error"></span>
                                 </div>
@@ -123,6 +129,8 @@
                                       </div>
                                     </div>
                                 </div>
+                                <input type="hidden" name="foto" id="foto">
+                                <span class="error-span" id="foto_error"></span>
                             </div>
 
                             <div class="form-group">
@@ -147,16 +155,23 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="{{ \URL::asset('js/bootstrap.min.js') }}"></script>
 
     <script>
     $("#submit").click(function(){
 
         $.ajax({
+            <?php if (!empty($data)) : ?>
+            url: "{{ route('daftaredit_patch', <?= $data->id ?>) }}",
+            <?php else : ?>
             url: "{{ route('daftar_post') }}",
-            method: "POST",
+            <?php endif; ?>
+            method: "PATCH",
             data: 
             {
+                <?php if (!empty($data)) : ?>
+                id : <?= $data->id ?>,
+                <?php endif; ?>
                 tahun_ajaran : $("#tahun_ajaran").val(),
                 nama_lengkap : $("#nama_lengkap").val(),
                 jenis_kelamin : $("#jenis_kelamin").val(),
@@ -166,11 +181,25 @@
                 bulan : $("#bulan").val(),
                 tanggal : $("#tanggal").val(),
                 alamat : $("#alamat").val(),
+                foto : $("#foto").val()
             },
             dataType: "json",
             success: function(data) {
                 $(".error-span").hide();
                 alert(data.message);
+                //reset semua parameter
+                $("#tahun_ajaran").val("");
+                $("#nama_lengkap").val("");
+                $("#jenis_kelamin").val("");
+                $("#agama").val("");
+                $("#tempat_lahir").val("");
+                $("#tahun").val("");
+                $("#bulan").val("");
+                $("#tanggal").val("");
+                $("#alamat").val("");
+                $("#foto").val("");
+                $('#preview').attr( { 'src' : '/img/upload-logo-icon.png' } );
+                $('.upload-photo-progress').width('0%');
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 Obj = jqXHR.responseJSON;
@@ -203,6 +232,7 @@
                 var percentVal = '100%';
                 $('.upload-photo-progress').width(percentVal);
                 $('#preview').attr( { 'src' : '/tmp/' + result.photo } );
+                $("#foto").val(result.photo);
             } else {
                 var percentVal = '0%';
                 $('.upload-photo-progress').width(percentVal);
@@ -213,7 +243,29 @@
         }
     }); 
 
-    })();       
+    })();
+
+    $(document).ready(function(){
+    <?php if (!empty($data)) : ?>
+        $("#tahun_ajaran").val("<?=$data->tahun?>");
+        $("#nama_lengkap").val("<?=$data->nama_lengkap?>");
+        $("#jenis_kelamin").val("<?=$data->jenis_kelamin?>");
+        $("#agama").val("<?=$data->agama?>");
+        $("#tempat_lahir").val("<?=$data->tempat_lahir?>");
+        <?php
+        $date = new \DateTime($data->tanggal_lahir);
+        $tahun =  $date->format('Y');
+        $bulan =  $date->format('m');
+        $tanggal =  $date->format('d');
+        ?>
+        $("#tahun").val(<?=$tahun?>);
+        $("#bulan").val(<?=$bulan?>);
+        $("#tanggal").val(<?=$tanggal?>);
+        $("#alamat").val("<?=$data->alamat?>");
+        $("#foto").val("<?=$data->foto?>");
+        $('#preview').attr('src','/images/<?=$data->foto?>');
+    <?php endif; ?>
+    });
     </script>
   </body>
 </html>

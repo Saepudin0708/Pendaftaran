@@ -48,3 +48,12 @@ Route::post('/daftar', [
 Route::post('/daftar/tmpupload', [
     'uses'  => '\App\Http\Controllers\PendaftaranController@postUploadToTemporary'
 ]);
+
+Route::get('/daftaredit/{id}', [
+    'uses'  => '\App\Http\Controllers\PendaftaranController@getPendaftaranEdit',
+]);
+
+Route::patch('/daftaredit/{id}', [
+    'uses'  => '\App\Http\Controllers\PendaftaranController@patchPendaftaranEdit',
+    'as' => 'daftaredit_patch'
+]);
