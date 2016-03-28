@@ -57,3 +57,13 @@ Route::patch('/daftaredit/{id}', [
     'uses'  => '\App\Http\Controllers\PendaftaranController@patchPendaftaranEdit',
     'as' => 'daftaredit_patch'
 ]);
+
+Route::get('/jurusan', [
+    'uses'  => '\App\Http\Controllers\JurusanController@getDaftarJurusan',
+    'as' => 'jurusan'
+]);
+
+Route::post('/jurusan', [
+    'uses'  => '\App\Http\Controllers\JurusanController@postDaftarJurusan',
+    'as' => 'post_jurusan'
+]);
